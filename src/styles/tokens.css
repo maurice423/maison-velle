@@ -1,0 +1,53 @@
+:root {
+  --outer: #D6D0C8;
+  --surface: #FFFFFF;
+  --surface-soft: #F6F1EA;
+  --beige: #E8E0D5;
+  --ink: #171512;
+  --muted: #716A5F;
+  --line: #DED6CB;
+  --lavender: #E8D9F0;
+  --grey-tile: #D9D7D2;
+  --blue-tile: #A8C4D0;
+  --beige-tile: #E8DDD3;
+  --accent: #171512;
+  --accent-ink: #FFFFFF;
+  --gold: #C8A96A;
+  --gold-soft: #E7D9B6;
+  --shadow: 0 24px 60px rgba(54, 45, 35, 0.14);
+}
+
+[data-theme='dark'],
+:root[data-theme='dark'],
+html.dark {
+  --outer: #171512;
+  --surface: #211E1A;
+  --surface-soft: #2A2621;
+  --beige: #332C25;
+  --ink: #F4EFE7;
+  --muted: #B8AEA0;
+  --line: #3D372F;
+  --lavender: #3A2E47;
+  --grey-tile: #33302C;
+  --blue-tile: #29434F;
+  --beige-tile: #3A3128;
+  --accent: #F4EFE7;
+  --accent-ink: #171512;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--outer);
+  color: var(--ink);
+  font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+}
