@@ -1,57 +1,139 @@
-# MAISON VELLE - Paris Luxury Skincare
+# MAISON VELLE — Paris Luxury Skincare
 
 Cosmetics for the whole body. For every body.
 
-## Deploy to GitHub Pages (Fix for "no index.html")
-1. Create new repo on GitHub: https://github.com/new
-2. Name it: maison-velle
-3. Upload files: Click "Add file" > "Upload files" > Drag index.html from this ZIP
-   IMPORTANT: index.html must be at ROOT, not inside a folder
-   Must be lowercase: index.html (not Index.html or index,html)
-4. Commit directly to main branch
-5. Go to Settings > Pages
-6. Source: Deploy from a branch
-7. Branch: main | Folder: / (root)
-8. Save - Wait 1-2 mins, your link appears
+## Stack
 
-If you still see "no index.html":
-- Check you're on main branch (top left)
-- Check file is at root: your-repo/index.html
-- Check Settings > Pages points to main / root
+- React 18 + React Router 6 (path-based routing, not hash routing)
+- Vite for development and static builds
+- LocalStorage-backed state for cart, wishlist, auth, and orders (demo storefronts only)
 
-## What's Inside
-- index.html - Complete website (5.8MB, self-contained, no build needed)
-- .nojekyll - Tells GitHub Pages to serve as-is
-- README.md - This file
-- vercel.json - For Vercel deploy
+## Local development
 
-## Features Included
-✓ Former bento design (the act. reference - hero with model holding tube)
-✓ Homepage description: What product is made of (Squalane 10% etc)
-✓ Ingredients carousel
-✓ Empty cart by default (only user-added products)
-✓ User dashboard when logged in with tracking
-✓ Email authentication on signup (verification modal)
-✓ Receipt generation when ordering
-✓ Account click shows tracking + orders
-✓ PayPal at end of checkout
-✓ Footer accepted cards: Visa, Mastercard, Amex, Maestro, Verve, Discover, PayPal, Apple Pay, Google Pay (9 real logos)
-✓ Bundles: Le Rituel Matin, Nuit, Complet with savings
-✓ Discount codes: VELLE20 20% OFF, FIRST10 10%, GLOW15 15%, PARIS25 25%
-✓ Pricing with sale badges
-✓ Dark mode fixed (text visible)
-✓ Continue with Google (G logo) + Apple (logo) buttons
-✓ Hover product -> model matching same product (pink serum, mint cream, burgundy serum)
-✓ No auto-refresh, only hero slideshow 5s
-✓ Currency 10, Country 10, Language EN/FR
-✓ AI assistant with thinking brain
-✓ Tilt cards, magnetic buttons, animations
+```bash
+npm install
+npm run dev
+```
 
-## Brand Description (340 chars)
-MAISON VELLE, Paris Le Marais. Cosmetics for the whole body. For every body. Luxury spa care without excess — 12 actives only: Squalane 10% sugarcane, Ceramides, Panthenol 5%, Hyaluronic 3 weights, Niacinamide 4%, Cica 80%, EGF+NAD. Vegan, cruelty-free, paraben-free, pH 5.5. Inspired by you, for the true ritual where we realize our value.
+The dev server binds to port 3000 by default. Open http://localhost:3000.
 
-## Deploy to Vercel / Netlify
-Just drag & drop index.html or the whole folder. No build command needed.
+## Multi-page structure
 
-## Support
-All images are embedded/remote CDN, works offline after load.
+This is a genuine multi-page React application. Every major destination has its own URL,
+page content, and navigation. Some of the key routes:
+
+- `/` — Homepage
+- `/shop/` — Shop All
+- `/collections/face-care/` — Face Care
+- `/collections/body-care/` — Body Care
+- `/collections/sets/` — Ritual Sets
+- `/products/:slug/` — Product detail
+- `/about/` — About MAISON VELLE
+- `/ingredients/` — Ingredient Philosophy
+- `/journal/` — Journal
+- `/journal/:slug/` — Journal article
+- `/contact/` — Contact
+- `/faq/` — FAQ
+- `/shipping-returns/` — Shipping and Returns
+- `/cart/` — Shopping Cart
+- `/checkout/` — Checkout
+- `/order-confirmation/` — Order Confirmation
+- `/account/sign-in/` — Sign In
+- `/account/create-account/` — Create Account
+- `/account/forgot-password/` — Forgot Password
+- `/account/` — Account Overview
+- `/account/orders/` — My Orders
+- `/account/order/:orderId/` — Order Details
+- `/account/profile/` — Personal Information
+- `/account/addresses/` — Saved Addresses
+- `/account/wishlist/` — Wishlist
+
+## Product data
+
+Products, collections, bundles, promotions, and journal entries live in `src/data/`.
+
+| File | Purpose |
+|---|---|
+| `src/data/products.js` | Products, collections, product lookups |
+| `src/data/promotions.js` | Promo codes and rules |
+| `src/data/journal.js` | Journal articles |
+
+### Existing promo codes
+
+| Code | Description |
+|---|---|
+| `VELLE20` | 20% off your first order |
+| `FIRST10` | 10% off for new customers |
+| `GLOW15` | 15% off selected face rituals |
+| `PARIS25` | 25% off the complete ritual set |
+
+## Cart and checkout
+
+- Add, remove, update quantity, and see subtotals update immediately.
+- Promo codes can be applied and removed.
+- Cart persists across navigation and refreshes via localStorage.
+- Checkout saves a demo order to localStorage so My Orders and order detail pages work.
+
+## Authentication
+
+- Sign in, create account, and forgot password pages are implemented.
+- Google Sign-In is wired through the Google Identity Services flow and driven by
+  `VITE_GOOGLE_CLIENT_ID`.
+- Until a real client ID is configured, the Google button shows a clear message instead
+  of a fake success screen.
+
+### Google OAuth setup
+
+1. Create a project in the [Google Cloud Console](https://console.cloud.google.com).
+2. Enable the Google Identity Services API / OAuth consent screen as needed.
+3. Create an OAuth 2.0 Client ID of type **Web application**.
+4. Add the following Authorized JavaScript origins for production:
+   - `https://maurice423.github.io`
+5. Add any local development origin you use for testing if needed.
+6. Copy the client ID into a local `.env` file:
+
+```
+VITE_GOOGLE_CLIENT_ID=your_client_id_here
+```
+
+Do not commit `.env` or any file containing secrets.
+
+## Deployment
+
+This project builds a static site that works on GitHub Pages.
+
+```bash
+npm run build
+```
+
+The build outputs `dist/`. For GitHub Pages, set the source to the `dist` folder
+or push the built files to the repository and configure Pages accordingly.
+
+Note: this repository already has `_redirects` and `vercel.json` from the previous
+single-page version. Those rewrites were appropriate when the site was one large
+`index.html`, but the new site is a real multi-page site with distinct static pages.
+If you deploy to a platform that requires rewrites for client-side routing, keep only
+the routes that actually need them. For a plain static export on GitHub Pages, the
+built pages should work as-is.
+
+## Visual identity
+
+The existing MAISON VELLE aesthetic has been preserved:
+
+- Black/gold neutral palette with warm off-white surfaces.
+- Cormorant Garamond for display headings and Manrope for body text.
+- Premium minimalist spacing, editorial hero, and quiet luxury feel.
+- Existing interactions are retained where they made sense: tilt cards, shine text,
+  rise-in and toast-in animations, gold selection color.
+
+## Environment variables
+
+| Variable | Purpose |
+|---|---|
+| `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID for Sign-In |
+
+## Next steps
+
+- Add a `.env` file locally with `VITE_GOOGLE_CLIENT_ID` if you want Google Sign-In.
+- Configure GitHub Pages to serve the `dist` folder after build, or push the built output.
+- Replace placeholder images and copy with final brand photography and messaging when ready.
