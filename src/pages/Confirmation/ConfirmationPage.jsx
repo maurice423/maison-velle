@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { formatPrice } from '../../utils/format';
+import { getProductById } from '../../data/products';
 
 export default function ConfirmationPage() {
   const location = useLocation();
@@ -103,7 +104,7 @@ export default function ConfirmationPage() {
             <h3 className="confirmation-card__section-title">Items</h3>
             <ul className="confirmation-items">
               {order.items.map((item, i) => {
-                const product = require('../../data/products').getProductById(item.productId);
+                const product = getProductById(item.productId);
                 return (
                   <li key={i} className="confirmation-item">
                     <div className="confirmation-item__info">

@@ -98,23 +98,45 @@ VITE_GOOGLE_CLIENT_ID=your_client_id_here
 
 Do not commit `.env` or any file containing secrets.
 
-## Deployment
+## Deployment (GitHub Pages)
 
-This project builds a static site that works on GitHub Pages.
+This project is a Vite single-page app with real routes, so **GitHub Pages must serve the
+build output in `dist/`, not the repository root**. The root `index.html` is the Vite
+development entry (it loads `/src/main.jsx`, which browsers cannot execute) — publishing
+it directly is what produced a blank page.
+
+Deployment is automated by `.github/workflows/deploy.yml`, which builds the site and
+publishes `dist/` on every push to `main`.
+
+**One-time repository setup:** Settings → Pages → Build and deployment → Source:
+**GitHub Actions**.
+
+The workflow builds with the project-page base path so assets and routes resolve under
+`https://maurice423.github.io/maison-velle/`:
 
 ```bash
-npm run build
+VITE_BASE_PATH=/maison-velle/ npm run build
 ```
 
-The build outputs `dist/`. For GitHub Pages, set the source to the `dist` folder
-or push the built files to the repository and configure Pages accordingly.
+`VITE_BASE_PATH` defaults to `/`, which is correct for local development and for hosts
+that serve the site from a domain root.
 
-Note: this repository already has `_redirects` and `vercel.json` from the previous
-single-page version. Those rewrites were appropriate when the site was one large
-`index.html`, but the new site is a real multi-page site with distinct static pages.
-If you deploy to a platform that requires rewrites for client-side routing, keep only
-the routes that actually need them. For a plain static export on GitHub Pages, the
-built pages should work as-is.
+### How deep links work on GitHub Pages
+
+GitHub Pages has no rewrite rules. The build emits a `404.html` that is an exact copy of
+`index.html`, so a request for `/maison-velle/shop/` still boots the app at that URL and
+React Router renders the matching route. This is generated automatically by the
+`spa-404-fallback` plugin in `vite.config.js` — no manual step.
+
+### Manual build check
+
+```bash
+npm run build     # base "/" build in dist/
+npm run preview   # serve the built site with SPA fallback
+```
+
+Note: `_redirects` (Netlify) and `vercel.json` are leftovers from the old single-file
+version. They do not affect GitHub Pages, which ignores them.
 
 ## Visual identity
 
@@ -131,9 +153,11 @@ The existing MAISON VELLE aesthetic has been preserved:
 | Variable | Purpose |
 |---|---|
 | `VITE_GOOGLE_CLIENT_ID` | Google OAuth client ID for Sign-In |
+| `VITE_BASE_PATH` | Build base path, e.g. `/maison-velle/` for GitHub Pages. Defaults to `/` |
 
 ## Next steps
 
 - Add a `.env` file locally with `VITE_GOOGLE_CLIENT_ID` if you want Google Sign-In.
-- Configure GitHub Pages to serve the `dist` folder after build, or push the built output.
+- Set Settings → Pages → Source to **GitHub Actions** so the deploy workflow publishes
+  the built site instead of the repository root.
 - Replace placeholder images and copy with final brand photography and messaging when ready.

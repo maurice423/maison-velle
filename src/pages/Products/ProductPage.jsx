@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import ProductGallery from '../../components/ProductGallery/ProductGallery';
+import ProductCard from '../../components/ProductCard';
 import { getProductBySlug, getProductById, products } from '../../data/products';
 import { useCart } from '../../contexts/CartContext';
 import { useWishlist } from '../../contexts/WishlistContext';

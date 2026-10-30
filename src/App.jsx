@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { CartProvider } from './contexts/CartContext';
+import { CartProvider, useCart } from './contexts/CartContext';
 import { WishlistProvider } from './contexts/WishlistContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { RecentProvider } from './contexts/RecentContext';
@@ -53,7 +53,7 @@ export default function App() {
 function AppShell() {
   const [cartOpen, setCartOpen] = useState(false);
   const [promoOpen, setPromoOpen] = useState(false);
-  const { itemCount } = useCartFromContext();
+  const { itemCount } = useCart();
   const location = useLocation();
 
   // Close cart on checkout/checkout-adjacent pages, but keep cart page itself openable
@@ -115,12 +115,6 @@ function AppShell() {
       `}</style>
     </>
   );
-}
-
-function useCartFromContext() {
-  // eslint-disable-next-line global-require
-  const { useCart } = require('./contexts/CartContext');
-  return useCart();
 }
 
 function NotFoundPage() {

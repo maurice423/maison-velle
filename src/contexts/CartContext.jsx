@@ -13,6 +13,7 @@ import {
   cartTotal,
   cartItemCount,
 } from '../services/cart';
+import { findPromotionByCode } from '../data/promotions';
 
 const CartContext = createContext(null);
 
@@ -87,6 +88,5 @@ export function useCart() {
 
 function findPromoFromCode(code) {
   if (!code) return null;
-  const { findPromotionByCode } = require('../data/promotions');
   return findPromotionByCode(code);
 }
